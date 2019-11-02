@@ -19,16 +19,6 @@ export class GildedRose {
         this.items = items;
     }
 
-    updateNormal(i: Item): Item {
-        i.quality -= deltaQ * i.sellIn >= 0 ? 1 : 2;
-        return i;
-    }
-
-    updateCheese(i: Item): Item {
-        i.quality += deltaQ * i.sellIn >= 0 ? 1 : 2;
-        return i;
-    }
-
     updateBackstage(i: Item): Item {
         if (i.sellIn < 0) {
             i.quality = 0
@@ -66,11 +56,11 @@ export class GildedRose {
     dispatch(i: Item): Item
     {
         var fnDict =
-            { "Aged Brie": this.aged(this.updateCheese)
+            { "Aged Brie": this.aged(function(i){i.quality += deltaQ * i.sellIn >= 0 ? 1 : 2; return i})
             , "Backstage passes to a TAFKAL80ETC concert": this.aged(this.updateBackstage)
             , "Sulfuras, Hand of Ragnaros": this.updateLegendary 
             };
-        return this.boundQuality((fnDict[i.name] || this.aged(this.updateNormal)))(i);
+        return this.boundQuality((fnDict[i.name] || this.aged(function(i){i.quality -= deltaQ * i.sellIn >= 0 ? 1 : 2; return i})))(i);
     }
 
     updateQuality() {
