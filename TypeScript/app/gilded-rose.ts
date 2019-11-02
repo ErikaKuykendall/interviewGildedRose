@@ -20,31 +20,27 @@ export class GildedRose {
     }
 
     updateNormal(i: Item): Item {
-        i.quality -= deltaQ;
-        if (i.sellIn < 0) {
-            i.quality -= deltaQ;
-        }
+        i.quality -= deltaQ * i.sellIn >= 0 ? 1 : 2;
         return i;
     }
 
     updateCheese(i: Item): Item {
-        i.quality += deltaQ;
-        if (i.sellIn < 0) {
-            i.quality += deltaQ;
-        }
+        i.quality += deltaQ * i.sellIn >= 0 ? 1 : 2;
         return i;
     }
 
     updateBackstage(i: Item): Item {
-            i.quality += deltaQ;
-            if (i.sellIn < 10) {
-                i.quality += deltaQ;
-            }
-            if (i.sellIn < 5) {
-                i.quality += deltaQ;
-            }
         if (i.sellIn < 0) {
-            i.quality = i.quality - i.quality
+            i.quality = 0
+        }
+        else if (i.sellIn < 5) {
+            i.quality += 3;
+        }
+        else if (i.sellIn < 10) {
+            i.quality += 2;
+        }
+        else {
+            i.quality += 1;
         }
         return i;
     }
