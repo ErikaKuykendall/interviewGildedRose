@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 class GildedRose(object):
-
     def __init__(self, items):
         self.items = items
 
@@ -20,7 +19,6 @@ class GildedRose(object):
             self.cast_class(item)
             item.update()
 
-
 class Item:
     def __init__(self, name, sell_in, quality):
         self.name = name
@@ -33,22 +31,23 @@ class Item:
 class NormalItem(Item):
     def update(self):
         self.sell_in -= 1
-        self.quality -= 2 if self.sell_in < 0 else 1
+        self.quality -= 1 if self.sell_in >= 0 else 2
         if self.quality < 0: self.quality = 0
 
 class AgingCheese(Item):
     def update(self):
         self.sell_in -= 1
-        self.quality += 2 if self.sell_in < 0 else 1
+        self.quality += 1 if self.sell_in >= 0 else 2
         if self.quality > 50: self.quality = 50
 
 class BackstagePass(Item):
     def update(self):
-        self.quality += 1
-        if self.sell_in <= 10 :
+        if self.sell_in > 10 :
             self.quality += 1
-        if self.sell_in <= 5:
-            self.quality += 1
+        elif 10 >= self.sell_in > 5:
+            self.quality += 2
+        else:
+            self.quality += 3
         self.sell_in -= 1
         if self.sell_in < 0:
             self.quality = 0
