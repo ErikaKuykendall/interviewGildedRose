@@ -5,16 +5,19 @@ class GildedRose(object):
     def __init__(self, items):
         self.items = items
 
+    def cast_class(self, item):
+        if item.name == "Sulfuras, Hand of Ragnaros":
+            item.__class__ = LegendaryItem
+        elif item.name == "Aged Brie":
+            item.__class__ = AgingCheese
+        elif item.name == "Backstage passes to a TAFKAL80ETC concert":
+            item.__class__ = BackstagePass
+        else:
+            item.__class__ = NormalItem
+
     def update_quality(self):
         for item in self.items:
-            if item.name == "Sulfuras, Hand of Ragnaros":
-                item.__class__ = LegendaryItem
-            elif item.name == "Aged Brie":
-                item.__class__ = AgingCheese
-            elif item.name == "Backstage passes to a TAFKAL80ETC concert":
-                item.__class__ = BackstagePass
-            else:
-                item.__class__ = NormalItem
+            self.cast_class(item)
             item.update()
 
 
