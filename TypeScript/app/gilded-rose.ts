@@ -19,50 +19,70 @@ export class GildedRose {
         this.items = items;
     }
 
+
+    updateNormal(i: Item) {
+        var n: Item =  new Item(i.name, i.sellIn, i.quality);
+        if (n.quality > 0) {
+            n.quality -= deltaQ;
+        }
+        n.sellIn -= deltaQ;
+        if (n.sellIn < 0) {
+            if (n.quality > 0) {
+                n.quality -= deltaQ;
+            }
+        }
+        return n;
+    }
+
+    updateCheese(i: Item) {
+        var n: Item =  new Item(i.name, i.sellIn, i.quality);
+        if (n.quality < 50) {
+            n.quality += deltaQ;
+        }
+        n.sellIn -= deltaQ;
+        if (n.sellIn < 0) {
+            if (n.quality < 50) {
+                n.quality += deltaQ;
+            }
+        }
+        return n;
+    }
+
+    updateBackstage(i: Item) {
+        var n: Item =  new Item(i.name, i.sellIn, i.quality);
+        if (n.quality < 50) {
+            n.quality += deltaQ;
+            if (n.sellIn < 11) {
+                if (n.quality < 50) {
+                    n.quality += deltaQ;
+                }
+            }
+            if (n.sellIn < 6) {
+                if (n.quality < 50) {
+                    n.quality += deltaQ;
+                }
+            }
+        }
+        n.sellIn -= deltaQ;
+        if (n.sellIn < 0) {
+            n.quality = n.quality - n.quality
+        }
+        return n;
+    }
+    updateLegendary(i: Item) { return i; }
+
     updateQuality() {
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i].name == 'Sulfuras, Hand of Ragnaros') {
-                continue;
+                this.items[i] = this.updateLegendary(this.items[i])
             }
-            if (this.items[i].name == 'Aged Brie') {
-                if (this.items[i].quality < 50) {
-                    this.items[i].quality += deltaQ;
-                }
-                this.items[i].sellIn -= deltaQ;
-                if (this.items[i].sellIn < 0) {
-                    if (this.items[i].quality < 50) {
-                        this.items[i].quality += deltaQ;
-                    }
-                }
+            else if (this.items[i].name == 'Aged Brie') {
+                this.items[i] = this.updateCheese(this.items[i])
             }
             else if (this.items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-                if (this.items[i].quality < 50) {
-                    this.items[i].quality += deltaQ;
-                    if (this.items[i].sellIn < 11) {
-                        if (this.items[i].quality < 50) {
-                            this.items[i].quality += deltaQ;
-                        }
-                    }
-                    if (this.items[i].sellIn < 6) {
-                        if (this.items[i].quality < 50) {
-                            this.items[i].quality += deltaQ;
-                        }
-                    }
-                }
-                this.items[i].sellIn -= deltaQ;
-                if (this.items[i].sellIn < 0) {
-                    this.items[i].quality = this.items[i].quality - this.items[i].quality
-                }
+                this.items[i] = this.updateBackstage(this.items[i])
             } else {
-                if (this.items[i].quality > 0) {
-                    this.items[i].quality -= deltaQ;
-                }
-                this.items[i].sellIn -= deltaQ;
-                if (this.items[i].sellIn < 0) {
-                    if (this.items[i].quality > 0) {
-                        this.items[i].quality -= deltaQ;
-                    }
-                }
+                this.items[i] = this.updateNormal(this.items[i])
             }
         }
 
