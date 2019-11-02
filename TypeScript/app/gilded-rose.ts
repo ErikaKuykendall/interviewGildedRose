@@ -21,7 +21,6 @@ export class GildedRose {
 
     updateNormal(i: Item): Item {
         i.quality -= deltaQ;
-        i.sellIn--;
         if (i.sellIn < 0) {
             i.quality -= deltaQ;
         }
@@ -30,7 +29,6 @@ export class GildedRose {
 
     updateCheese(i: Item): Item {
         i.quality += deltaQ;
-        i.sellIn--;
         if (i.sellIn < 0) {
             i.quality += deltaQ;
         }
@@ -39,13 +37,12 @@ export class GildedRose {
 
     updateBackstage(i: Item): Item {
             i.quality += deltaQ;
-            if (i.sellIn < 11) {
+            if (i.sellIn < 10) {
                 i.quality += deltaQ;
             }
-            if (i.sellIn < 6) {
+            if (i.sellIn < 5) {
                 i.quality += deltaQ;
             }
-        i.sellIn--;
         if (i.sellIn < 0) {
             i.quality = i.quality - i.quality
         }
@@ -54,7 +51,7 @@ export class GildedRose {
 
     updateLegendary(i: Item): Item { return i; }
 
-    boundedQuality(f: (i: Item) => Item): (i: Item) => Item {
+    boundQuality(f: (i: Item) => Item): (i: Item) => Item {
         return function(i: Item){
             var r: Item = f(i)
             if(r.quality > 50) r.quality = 50;
@@ -63,14 +60,21 @@ export class GildedRose {
         }
     }
 
+    aged(f: (i: Item) => Item): (i: Item) => Item {
+        return function(i: Item){
+            i.sellIn--;
+            return f(i)
+        }
+    }
+
     dispatch(i: Item): Item
     {
         var fnDict =
-            { "Aged Brie": this.updateCheese
-            , "Backstage passes to a TAFKAL80ETC concert": this.updateBackstage
+            { "Aged Brie": this.aged(this.updateCheese)
+            , "Backstage passes to a TAFKAL80ETC concert": this.aged(this.updateBackstage)
             , "Sulfuras, Hand of Ragnaros": this.updateLegendary 
             };
-        return this.boundedQuality((fnDict[i.name] || this.updateNormal))(i);
+        return this.boundQuality((fnDict[i.name] || this.aged(this.updateNormal)))(i);
     }
 
     updateQuality() {
