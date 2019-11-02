@@ -35,8 +35,6 @@ export class GildedRose {
         return i;
     }
 
-    updateLegendary(i: Item): Item { return i; }
-
     boundQuality(f: (i: Item) => Item): (i: Item) => Item {
         return function(i: Item){
             var r: Item = f(i)
@@ -58,7 +56,7 @@ export class GildedRose {
         var fnDict =
             { "Aged Brie": this.aged(function(i){i.quality += deltaQ * i.sellIn >= 0 ? 1 : 2; return i})
             , "Backstage passes to a TAFKAL80ETC concert": this.aged(this.updateBackstage)
-            , "Sulfuras, Hand of Ragnaros": this.updateLegendary 
+            , "Sulfuras, Hand of Ragnaros": function(i) {return i;}
             };
         return this.boundQuality((fnDict[i.name] || this.aged(function(i){i.quality -= deltaQ * i.sellIn >= 0 ? 1 : 2; return i})))(i);
     }
