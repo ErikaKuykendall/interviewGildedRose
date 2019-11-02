@@ -19,7 +19,7 @@ export class GildedRose {
         this.items = items;
     }
 
-    updateNormal(i: Item) {
+    updateNormal(i: Item): Item{
         var n: Item =  new Item(i.name, i.sellIn, i.quality);
         if (n.quality > 0) {
             n.quality -= deltaQ;
@@ -33,7 +33,7 @@ export class GildedRose {
         return n;
     }
 
-    updateCheese(i: Item) {
+    updateCheese(i: Item): Item{
         var n: Item =  new Item(i.name, i.sellIn, i.quality);
         if (n.quality < 50) {
             n.quality += deltaQ;
@@ -47,7 +47,7 @@ export class GildedRose {
         return n;
     }
 
-    updateBackstage(i: Item) {
+    updateBackstage(i: Item): Item{
         var n: Item =  new Item(i.name, i.sellIn, i.quality);
         if (n.quality < 50) {
             n.quality += deltaQ;
@@ -69,18 +69,22 @@ export class GildedRose {
         return n;
     }
 
-    updateLegendary(i: Item) { return i; }
+    updateLegendary(i: Item): Item { return i; }
 
-    dispatch =
-        { "Aged Brie": this.updateCheese
-          , "Backstage passes to a TAFKAL80ETC concert": this.updateBackstage
-          , "Sulfuras, Hand of Ragnaros": this.updateLegendary 
-        };
+    dispatch(i: Item): Item
+    {
+        var fnDict =
+            { "Aged Brie": this.updateCheese
+            , "Backstage passes to a TAFKAL80ETC concert": this.updateBackstage
+            , "Sulfuras, Hand of Ragnaros": this.updateLegendary 
+            };
+        return (fnDict[i.name] || this.updateNormal)(i);
+    }
+
+
 
     updateQuality() {
-        for (let i = 0; i < this.items.length; i++) {
-            this.items[i] = (this.dispatch[this.items[i].name] || this.updateNormal)(this.items[i]);
-        }
+        this.items = this.items.map(this.dispatch, this);
 
         return this.items;
     }
