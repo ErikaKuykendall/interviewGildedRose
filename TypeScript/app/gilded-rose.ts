@@ -54,10 +54,13 @@ export class GildedRose {
 
     updateLegendary(i: Item): Item { return i; }
 
-    boundedQuality(i: Item): Item {
-        if(i.quality > 50) i.quality = 50;
-        if(i.quality < 0) i.quality = 0;
-        return i;
+    boundedQuality(f: (i: Item) => Item): (i: Item) => Item {
+        return function(i: Item){
+            var r: Item = f(i)
+            if(r.quality > 50) r.quality = 50;
+            if(r.quality < 0) r.quality = 0;
+            return r;
+        }
     }
 
     dispatch(i: Item): Item
@@ -67,7 +70,7 @@ export class GildedRose {
             , "Backstage passes to a TAFKAL80ETC concert": this.updateBackstage
             , "Sulfuras, Hand of Ragnaros": this.updateLegendary 
             };
-        return this.boundedQuality((fnDict[i.name] || this.updateNormal)(i));
+        return this.boundedQuality((fnDict[i.name] || this.updateNormal))(i);
     }
 
     updateQuality() {
