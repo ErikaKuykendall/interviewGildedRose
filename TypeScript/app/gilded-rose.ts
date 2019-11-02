@@ -51,6 +51,8 @@ export class GildedRose {
             , "Backstage passes to a TAFKAL80ETC concert" : this.aged(this.updateBackstage)
             // Legendary items like Sulfuras do not change or expire in any way
             , "Sulfuras, Hand of Ragnaros"                : function(i: Item) {return i;}
+            // Conjured items decrease in value twice as fast as normal items, and four times as fast after their sellIn date
+            , "Cojured Mana Cake"                        : this.aged(function(i: Item){i.quality -= deltaQ * i.sellIn >= 0 ? 2 : 4; return i})
             };
         // If the item is not found in the dispatch map, treat it as a normal item:
         // It decreases in value every day to a minimum of 0, and does so twice as fast after its sellIn date
