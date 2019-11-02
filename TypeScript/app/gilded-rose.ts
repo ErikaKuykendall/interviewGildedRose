@@ -19,49 +19,35 @@ export class GildedRose {
         this.items = items;
     }
 
-    updateNormal(i: Item): Item{
+    updateNormal(i: Item): Item {
         var n: Item =  new Item(i.name, i.sellIn, i.quality);
-        if (n.quality > 0) {
+        n.quality -= deltaQ;
+        n.sellIn--;
+        if (n.sellIn < 0) {
             n.quality -= deltaQ;
         }
-        n.sellIn--;
-        if (n.sellIn < 0) {
-            if (n.quality > 0) {
-                n.quality -= deltaQ;
-            }
-        }
         return n;
     }
 
-    updateCheese(i: Item): Item{
+    updateCheese(i: Item): Item {
         var n: Item =  new Item(i.name, i.sellIn, i.quality);
-        if (n.quality < 50) {
+        n.quality += deltaQ;
+        n.sellIn--;
+        if (n.sellIn < 0) {
             n.quality += deltaQ;
         }
-        n.sellIn--;
-        if (n.sellIn < 0) {
-            if (n.quality < 50) {
-                n.quality += deltaQ;
-            }
-        }
         return n;
     }
 
-    updateBackstage(i: Item): Item{
+    updateBackstage(i: Item): Item {
         var n: Item =  new Item(i.name, i.sellIn, i.quality);
-        if (n.quality < 50) {
             n.quality += deltaQ;
             if (n.sellIn < 11) {
-                if (n.quality < 50) {
-                    n.quality += deltaQ;
-                }
+                n.quality += deltaQ;
             }
             if (n.sellIn < 6) {
-                if (n.quality < 50) {
-                    n.quality += deltaQ;
-                }
+                n.quality += deltaQ;
             }
-        }
         n.sellIn--;
         if (n.sellIn < 0) {
             n.quality = n.quality - n.quality
@@ -71,6 +57,12 @@ export class GildedRose {
 
     updateLegendary(i: Item): Item { return i; }
 
+    boundedQuality(i: Item): Item {
+        if(i.quality > 50) i.quality = 50;
+        if(i.quality < 0) i.quality = 0;
+        return i;
+    }
+
     dispatch(i: Item): Item
     {
         var fnDict =
@@ -78,10 +70,8 @@ export class GildedRose {
             , "Backstage passes to a TAFKAL80ETC concert": this.updateBackstage
             , "Sulfuras, Hand of Ragnaros": this.updateLegendary 
             };
-        return (fnDict[i.name] || this.updateNormal)(i);
+        return this.boundedQuality((fnDict[i.name] || this.updateNormal)(i));
     }
-
-
 
     updateQuality() {
         this.items = this.items.map(this.dispatch, this);
