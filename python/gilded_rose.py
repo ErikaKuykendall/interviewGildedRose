@@ -30,6 +30,8 @@ class GildedRose(object):
             item.__class__ = AgingCheese
         elif item.name == "Backstage passes to a TAFKAL80ETC concert":
             item.__class__ = BackstagePass
+        elif item.name == "Conjured Mana Cake":
+            item.__class__ = ConjuredItem
         else:
             item.__class__ = NormalItem
 
@@ -106,6 +108,14 @@ class BackstagePass(Item):
         if self.sell_in < 0:
             self.quality = 0
         if self.quality > 50: self.quality = 50
+
+class ConjuredItem(Item):
+    """Conjured items degrade in quality twice as fast as normal items."""
+
+    def update(self):
+        self.sell_in -= 1
+        self.quality -= 2 if self.sell_in >= 0 else 4
+        if self.quality < 0: self.quality = 0
 
 class LegendaryItem(Item):
     """Legendary items do not expire or change in value."""
