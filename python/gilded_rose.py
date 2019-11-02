@@ -8,25 +8,14 @@ class GildedRose(object):
     def update_quality(self):
         for item in self.items:
             if item.name == "Sulfuras, Hand of Ragnaros":
-                continue
+                item.__class__ = LegendaryItem
             elif item.name == "Aged Brie":
-                item.sell_in -= 1
-                item.quality += 2 if item.sell_in < 0 else 1
-                if item.quality > 50: item.quality = 50
+                item.__class__ = AgingCheese
             elif item.name == "Backstage passes to a TAFKAL80ETC concert":
-                item.quality += 1
-                if item.sell_in <= 10 :
-                     item.quality += 1
-                if item.sell_in <= 5:
-                    item.quality += 1
-                item.sell_in -= 1
-                if item.sell_in < 0:
-                    item.quality = 0
-                if item.quality > 50: item.quality = 50
+                item.__class__ = BackstagePass
             else:
-                item.sell_in -= 1
-                item.quality -= 2 if item.sell_in < 0 else 1
-                if item.quality < 0: item.quality = 0
+                item.__class__ = NormalItem
+            item.update()
 
 
 class Item:
@@ -37,3 +26,31 @@ class Item:
 
     def __repr__(self):
         return "%s, %s, %s" % (self.name, self.sell_in, self.quality)
+
+class NormalItem(Item):
+    def update(self):
+        self.sell_in -= 1
+        self.quality -= 2 if self.sell_in < 0 else 1
+        if self.quality < 0: self.quality = 0
+
+class AgingCheese(Item):
+    def update(self):
+        self.sell_in -= 1
+        self.quality += 2 if self.sell_in < 0 else 1
+        if self.quality > 50: self.quality = 50
+
+class BackstagePass(Item):
+    def update(self):
+        self.quality += 1
+        if self.sell_in <= 10 :
+            self.quality += 1
+        if self.sell_in <= 5:
+            self.quality += 1
+        self.sell_in -= 1
+        if self.sell_in < 0:
+            self.quality = 0
+        if self.quality > 50: self.quality = 50
+
+class LegendaryItem(Item):
+    def update(self):
+        pass
