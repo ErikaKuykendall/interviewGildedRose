@@ -20,39 +20,36 @@ export class GildedRose {
     }
 
     updateNormal(i: Item): Item {
-        var n: Item =  new Item(i.name, i.sellIn, i.quality);
-        n.quality -= deltaQ;
-        n.sellIn--;
-        if (n.sellIn < 0) {
-            n.quality -= deltaQ;
+        i.quality -= deltaQ;
+        i.sellIn--;
+        if (i.sellIn < 0) {
+            i.quality -= deltaQ;
         }
-        return n;
+        return i;
     }
 
     updateCheese(i: Item): Item {
-        var n: Item =  new Item(i.name, i.sellIn, i.quality);
-        n.quality += deltaQ;
-        n.sellIn--;
-        if (n.sellIn < 0) {
-            n.quality += deltaQ;
+        i.quality += deltaQ;
+        i.sellIn--;
+        if (i.sellIn < 0) {
+            i.quality += deltaQ;
         }
-        return n;
+        return i;
     }
 
     updateBackstage(i: Item): Item {
-        var n: Item =  new Item(i.name, i.sellIn, i.quality);
-            n.quality += deltaQ;
-            if (n.sellIn < 11) {
-                n.quality += deltaQ;
+            i.quality += deltaQ;
+            if (i.sellIn < 11) {
+                i.quality += deltaQ;
             }
-            if (n.sellIn < 6) {
-                n.quality += deltaQ;
+            if (i.sellIn < 6) {
+                i.quality += deltaQ;
             }
-        n.sellIn--;
-        if (n.sellIn < 0) {
-            n.quality = n.quality - n.quality
+        i.sellIn--;
+        if (i.sellIn < 0) {
+            i.quality = i.quality - i.quality
         }
-        return n;
+        return i;
     }
 
     updateLegendary(i: Item): Item { return i; }
